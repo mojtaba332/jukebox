@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('content')
 <h1>All Playlists</h1>
 
 <ul>
@@ -11,3 +14,4 @@
 </ul>
 
 <a href="/playlists/create">Create New Playlist</a>
+@endsection

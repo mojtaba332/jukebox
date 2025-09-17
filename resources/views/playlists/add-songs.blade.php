@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('content')
 <h1>Add Songs to Playlist</h1>
 
 <form method="POST" action="/playlists/{{ $playlist->id }}/songs">
@@ -11,3 +14,4 @@
 
     <button type="submit">Add to Playlist</button>
 </form>
+@endsection

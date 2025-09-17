@@ -1,3 +1,5 @@
+@extends('layouts.app')
+@section('content')
 <h1>Songs in Playlist: {{ $playlist->name }}</h1>
 
 <ul>
@@ -12,3 +14,4 @@
 </ul>
 
 <a href="/playlists/{{ $playlist->id }}/add-songs">Add Songs</a>
+@endsection

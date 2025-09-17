@@ -1,3 +1,5 @@
+@extends('layouts.app')
+@section('content')
 <h1>Genres</h1>
 
 <ul>
@@ -5,3 +7,4 @@
         <li>{{ $genre->name }}</li>
     @endforeach
 </ul>
+@endsection

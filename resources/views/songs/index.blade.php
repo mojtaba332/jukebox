@@ -1,3 +1,5 @@
+@extends('layouts.app')
+@section('content')
 <h1>Songs in {{ $genre->name }}</h1>
 
 <ul>
@@ -7,3 +9,4 @@
         </li>
     @endforeach
 </ul>
+@endsection

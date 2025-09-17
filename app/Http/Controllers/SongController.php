@@ -18,4 +18,9 @@ class SongController extends Controller
     {
         return view('songs.show',compact('song'));
     }
+    public function all()
+    {
+        $songs = Song::with('genre')->get(); // eager load genre
+        return view('songs.all', compact('songs'));
+    }
 }

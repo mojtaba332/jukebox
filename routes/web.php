@@ -48,3 +48,6 @@ Route::post('/playlists/{playlist}/songs', [PlaylistController::class, 'attachSo
 
 // Show songs in a playlist
 Route::get('/playlists/{playlist}/songs', [PlaylistController::class, 'showSongs']);
+
+// all songs
+Route::get('/songs', [SongController::class, 'all']);
