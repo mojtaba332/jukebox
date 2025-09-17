@@ -24,7 +24,7 @@ class PlaylistController extends Controller
     {
         $playlist = Playlist::findOrFail($id);
         $songs = Song::all();
-        return view('playlists.addsongs', compact('playlist', 'songs'));
+        return view('playlists.add-songs', compact('playlist', 'songs'));
     }
 
     public function attachSongs(Request $request, $id)

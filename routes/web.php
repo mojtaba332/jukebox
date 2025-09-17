@@ -41,7 +41,7 @@ Route::post('/playlists', [PlaylistController::class, 'store']);
 Route::get('/playlists', [PlaylistController::class, 'index']);
 
 // Show form to add songs to a playlist
-Route::get('/playlists/{playlist}/addsongs', [PlaylistController::class, 'addSongsForm']);
+Route::get('/playlists/{playlist}/add-songs', [PlaylistController::class, 'addSongsForm']);
 
 // Attach songs to a playlist
 Route::post('/playlists/{playlist}/songs', [PlaylistController::class, 'attachSongs']);
