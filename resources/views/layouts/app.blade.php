@@ -6,7 +6,22 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav>
+    <a href="/songs">Liedjes</a>
+    <a href="/genres">Genres</a>
+
+    @auth
+        <a href="/playlists">Mijn Playlists</a>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit">Uitloggen</button>
+        </form>
+    @else
+        <a href="/login">Inloggen</a>
+        <a href="/register">Registreren</a>
+    @endauth
+</nav>
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container-fluid">
             <a class="navbar-brand" href="/songs">🎵 Jukebox</a>
             <div class="collapse navbar-collapse">
@@ -14,12 +29,11 @@
                     <li class="nav-item"><a class="nav-link" href="/songs">All Songs</a></li>
                     <li class="nav-item"><a class="nav-link" href="/genres">Genres</a></li>
                     <li class="nav-item"><a class="nav-link" href="/playlists">Playlists</a></li>
-                    
-
+                    <li class="nav-item"><a class="nav-link" href="/register">register</a></li>                    
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav> -->
 
     <div class="container">
         @yield('content')

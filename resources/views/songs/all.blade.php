@@ -18,8 +18,14 @@
 </form>
 
 
+    @auth
+        <p>Welkom terug, {{ auth()->user()->name }}!</p>
+        <a href="/playlists/create">Nieuwe playlist maken</a>
+    @endauth
 
-
+    @guest
+        <p>Je bent niet ingelogd. <a href="/login">Log in</a> om playlists te beheren.</p>
+    @endguest
 
 <h1>Songs</h1>
 @if ($songs->isEmpty())
@@ -33,19 +39,4 @@
         @endforeach
     </ul>
 @endif
-
-
-    
-
-    <!-- <ul>
-        @forelse ($songs as $song)
-            <li>
-                <strong>{{ $song->name }}</strong> by {{ $song->artist }}
-                ({{ $song->duration }} sec) —
-                Genre: {{ $song->genre->name ?? 'Unknown' }}
-            </li>
-        @empty
-            <li>No songs found.</li>
-        @endforelse
-    </ul> -->
 @endsection
