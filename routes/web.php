@@ -51,3 +51,27 @@ Route::get('/playlists/{playlist}/songs', [PlaylistController::class, 'showSongs
 
 // all songs
 Route::get('/songs', [SongController::class, 'all']);
+
+////SONGS
+// Show edit form
+Route::get('/songs/{song}/edit', [SongController::class, 'edit']);
+
+// Handle update
+Route::put('/songs/{song}', [SongController::class, 'update']);
+
+// Handle delete
+Route::delete('/songs/{song}', [SongController::class, 'destroy']);
+
+
+/// playlist
+// Show edit form
+Route::get('/playlists/{playlist}/edit', [PlaylistController::class, 'edit']);
+
+// Handle update
+Route::put('/playlists/{playlist}', [PlaylistController::class, 'update']);
+
+// Handle delete
+Route::delete('/playlists/{playlist}', [PlaylistController::class, 'destroy']);
+
+/// filters
+Route::get('/songs', [SongController::class, 'index']);

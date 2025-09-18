@@ -34,9 +34,6 @@ class PlaylistController extends Controller
         return redirect('/playlists/' . $id . '/songs');
     }
 
-
-
-
     public function showSongs($id)
     {
         $playlist = Playlist::with('songs')->findOrFail($id);
@@ -47,4 +44,23 @@ class PlaylistController extends Controller
         $playlists = Playlist::all();
         return view('playlists.index', compact('playlists'));
     }
+
+    public function edit(Playlist $playlist)
+    {
+        return view('playlists.edit', compact('playlist'));
+    }
+
+    public function update(Request $request, Playlist $playlist)
+    {
+        $request->validate(['name' => 'required']);
+        $playlist->update(['name' => $request->name]);
+        return redirect('/playlists/' . $playlist->id . '/songs');
+    }
+
+    public function destroy(Playlist $playlist)
+    {
+        $playlist->delete();
+        return redirect('/playlists')->with('success', 'Playlist deleted.');
+    }
+
 }
