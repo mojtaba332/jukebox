@@ -31,7 +31,7 @@ Route::get('/',[HomeController::class, 'index'])->name('home');
 Route::get('/genres', [GenreController::class, 'index']);
 
 // Show songs for a selected genre
-// Route::get('/genres/{genre}/songs', [SongController::class, 'index']);
+Route::get('/genres/{genre}/songs', [SongController::class, 'index']);
 Route::get('/songs/{song}', [SongController::class, 'show']);
 
 // Show form to create a playlist
@@ -78,8 +78,8 @@ Route::delete('/playlists/{playlist}', [PlaylistController::class, 'destroy']);
 /// filters
 Route::get('/songs', [SongController::class, 'index']);
 
-
-
+// (genre to songs)
+Route::get('/genres/{genre}', [GenreController::class, 'show'])->name('genres.show');
 
 /// for Autantication
 
@@ -98,6 +98,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/playlists/{playlist}/edit', [PlaylistController::class, 'edit']);
     Route::put('/playlists/{playlist}', [PlaylistController::class, 'update']);
     Route::delete('/playlists/{playlist}', [PlaylistController::class, 'destroy']);
+    
 
     ////SONGS
     // Show edit form

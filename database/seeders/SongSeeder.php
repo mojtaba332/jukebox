@@ -4,16 +4,14 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Song;
+
 
 class SongSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run(): void
     {
+        // Manually defined songs
         $songs = [
             ['name' => 'Bohemian Rhapsody', 'artist' => 'Queen', 'duration' => 354, 'genre_id' => 2],
             ['name' => 'Lose Yourself', 'artist' => 'Eminem', 'duration' => 326, 'genre_id' => 4],
@@ -23,8 +21,10 @@ class SongSeeder extends Seeder
         ];
 
         foreach ($songs as $song) {
-            \App\Models\Song::create($song);
+            Song::create($song);
         }
-    }
 
+        // Generate ?? random songs using factory
+        Song::factory()->count(10)->create();
+    }
 }

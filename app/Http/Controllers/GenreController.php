@@ -11,4 +11,9 @@ class GenreController extends Controller
         $genres = Genre::all();
         return view('genres.index', compact('genres'));
     }
+    public function show(Genre $genre)
+    {
+        $songs = $genre->songs()->get();
+        return view('genres.songs', compact('genres', 'songs'));
+    }
 }
