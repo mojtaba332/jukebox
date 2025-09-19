@@ -6,34 +6,30 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <nav>
-    <a href="/songs">Liedjes</a>
-    <a href="/genres">Genres</a>
-
-    @auth
-        <a href="/playlists">Mijn Playlists</a>
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit">Uitloggen</button>
-        </form>
-    @else
-        <a href="/login">Inloggen</a>
-        <a href="/register">Registreren</a>
-    @endauth
-</nav>
-    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/songs">🎵 Jukebox</a>
+            <a class="navbar-brand" href="/">🎵 Jukebox</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="/songs">All Songs</a></li>
+
+                    <li class="nav-item"><a class="nav-link" href="/songs">Songs</a></li>
                     <li class="nav-item"><a class="nav-link" href="/genres">Genres</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/playlists">Playlists</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/register">register</a></li>                    
+
+                @auth
+                    <a href="/playlists">Mijn Playlists</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit">Uitloggen</button>
+                    </form>
+                @else
+                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/register">CreateAccount</a></li>
+                @endauth
                 </ul>
+        
             </div>
         </div>
-    </nav> -->
+    </nav>
 
     <div class="container">
         @yield('content')

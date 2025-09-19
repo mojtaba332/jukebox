@@ -5,13 +5,13 @@ use App\Http\Controllers\GenreController;
 use App\Http\Controllers\SongController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\AuthController;
-
+use App\http\Controllers\HomeController;
 
 
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('home');
+})->name('home');
 
 /*
 |--------------------------------------------------------------------------
@@ -25,11 +25,13 @@ Route::get('/', function () {
 */
 
 
+Route::get('/',[HomeController::class, 'index'])->name('home');
+
 // Show all genres
 Route::get('/genres', [GenreController::class, 'index']);
 
 // Show songs for a selected genre
-Route::get('/genres/{genre}/songs', [SongController::class, 'index']);
+// Route::get('/genres/{genre}/songs', [SongController::class, 'index']);
 Route::get('/songs/{song}', [SongController::class, 'show']);
 
 // Show form to create a playlist
@@ -53,16 +55,15 @@ Route::get('/playlists/{playlist}/songs', [PlaylistController::class, 'showSongs
 // all songs
 Route::get('/songs', [SongController::class, 'all']);
 
-////SONGS
-// Show edit form
-Route::get('/songs/{song}/edit', [SongController::class, 'edit']);
+// ////SONGS
+// // Show edit form
+// Route::get('/songs/{song}/edit', [SongController::class, 'edit']);
 
-// Handle update
-Route::put('/songs/{song}', [SongController::class, 'update']);
+// // Handle update
+// Route::put('/songs/{song}', [SongController::class, 'update']);
 
-// Handle delete
-Route::delete('/songs/{song}', [SongController::class, 'destroy']);
-
+// // Handle delete
+// Route::delete('/songs/{song}', [SongController::class, 'destroy']);
 
 /// playlist
 // Show edit form
@@ -97,4 +98,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/playlists/{playlist}/edit', [PlaylistController::class, 'edit']);
     Route::put('/playlists/{playlist}', [PlaylistController::class, 'update']);
     Route::delete('/playlists/{playlist}', [PlaylistController::class, 'destroy']);
+
+    ////SONGS
+    // Show edit form
+    Route::get('/songs/{song}/edit', [SongController::class, 'edit']);
+
+    // Handle update
+    Route::put('/songs/{song}', [SongController::class, 'update']);
+
+    // Handle delete
+    Route::delete('/songs/{song}', [SongController::class, 'destroy']);
+
 });
