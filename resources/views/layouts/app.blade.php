@@ -16,10 +16,10 @@
                     <li class="nav-item"><a class="nav-link" href="/genres">Genres</a></li>
 
                 @auth
-                    <a href="/playlists">Mijn Playlists</a>
+                    <li class="nav-item"><a class="nav-link" href="/playlists">Mijn Playlists</a></li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit">Uitloggen</button>
+                    <li class="nav-item"><button class="nav-link" type="submit">Uitloggen</button></li>
                     </form>
                 @else
                     <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>

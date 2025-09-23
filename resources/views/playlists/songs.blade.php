@@ -7,7 +7,13 @@
         <li>
             <strong>{{ $song->name }}</strong> by {{ $song->artist }}
             ({{ $song->duration }} sec)
+            <form action="{{ route('playlists.detachSong', [$playlist->id, $song->id]) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-sm btn-primary">Delete</button>
+            </form>
         </li>
+        
     @empty
         <li>No songs in this playlist yet.</li>
     @endforelse

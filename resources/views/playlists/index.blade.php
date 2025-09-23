@@ -10,13 +10,16 @@
                 {{ $playlist->name }}
 
             </a>
-            <a href="/playlists/{{ $playlist->id }}/edit">✏️ Edit</a>
+            @auth
+    @if ($playlist->user_id === auth()->id())
+        <a href="{{ route('playlists.edit', $playlist) }}">Edit</a>
+        <form method="POST" action="{{ route('playlists.destroy', $playlist) }}">
+            @csrf @method('DELETE')
+            <button>Delete</button>
+        </form>
+    @endif
+@endauth
 
-<form method="POST" action="/playlists/{{ $playlist->id }}" style="display:inline;">
-    @csrf
-    @method('DELETE')
-    <button type="submit" onclick="return confirm('Delete this playlist?')">🗑 Delete</button>
-</form>
 
         </li>
     @endforeach
