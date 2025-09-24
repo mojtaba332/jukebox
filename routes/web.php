@@ -138,13 +138,26 @@ Route::get('/genres/{genre}/songs', [SongController::class, 'index']); // songs 
 Route::get('/songs', [SongController::class, 'index']); // with optional ?genre_id
 Route::get('/songs/{song}', [SongController::class, 'show']);
 
+
+// ✅ Guest playlist routes — open to everyone
+Route::get('/guest-playlists', [PlaylistController::class, 'guestIndex'])->name('guest.playlists');
+Route::post('/guest-playlists', [PlaylistController::class, 'guestStore'])->name('guest.playlists.store');
+Route::get('/guest-playlists/{id}', [PlaylistController::class, 'guestShow'])->name('guest.playlists.show');
+Route::post('/guest-playlists/{id}/songs', [PlaylistController::class, 'guestAddSong'])->name('guest.playlists.addSong');
+Route::delete('/guest-playlists/{id}/songs/{songId}', [PlaylistController::class, 'guestRemoveSong'])->name('guest.playlists.removeSong');
+Route::patch('/guest-playlists/{id}/rename', [PlaylistController::class, 'guestRename'])->name('guest.playlists.rename');
+Route::delete('/guest-playlists/{id}/songs/{songId}', [PlaylistController::class, 'guestRemoveSong'])->name('guest.playlists.removeSong');
+Route::delete('/guest-playlists/{id}', [PlaylistController::class, 'guestDelete'])->name('guest.playlists.delete');
+
+
 // Playlists (public access to view songs)
-Route::get('/playlists/create', [PlaylistController::class, 'create']);
-Route::get('/playlists', [PlaylistController::class, 'index']);
-Route::get('/playlists/{playlist}', [PlaylistController::class, 'show'])->name('playlists.show');
-Route::get('/playlists/{playlist}/songs', [PlaylistController::class, 'showSongs']);
-Route::get('/playlists/{playlist}/add-songs', [PlaylistController::class, 'addSongsForm']);
-Route::post('/playlists/{playlist}/songs', [PlaylistController::class, 'attachSongs']);
+
+// Route::get('/playlists/create', [PlaylistController::class, 'create']);
+// Route::get('/playlists', [PlaylistController::class, 'index']);
+// Route::get('/playlists/{playlist}', [PlaylistController::class, 'show'])->name('playlists.show');
+// Route::get('/playlists/{playlist}/songs', [PlaylistController::class, 'showSongs']);
+// Route::get('/playlists/{playlist}/add-songs', [PlaylistController::class, 'addSongsForm']);
+// Route::post('/playlists/{playlist}/songs', [PlaylistController::class, 'attachSongs']);
 
 // Protected routes (only for logged-in users)
 Route::middleware(['auth'])->group(function () {

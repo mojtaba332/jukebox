@@ -15,18 +15,19 @@
                     <li class="nav-item"><a class="nav-link" href="/songs">Songs</a></li>
                     <li class="nav-item"><a class="nav-link" href="/genres">Genres</a></li>
 
-                @auth
-                    <li class="nav-item"><a class="nav-link" href="/playlists">Mijn Playlists</a></li>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                    <li class="nav-item"><button class="nav-link" type="submit">Uitloggen</button></li>
-                    </form>
-                @else
-                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/register">CreateAccount</a></li>
-                @endauth
+                    @auth
+                        <li class="nav-item"><a class="nav-link" href="{{ route('playlists.index') }}">Mijn Playlists</a></li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <li class="nav-item"><button class="nav-link btn btn-link" type="submit">Uitloggen</button></li>
+                        </form>
+                    @else
+                        <li class="nav-item"><a class="nav-link" href="{{ route('guest.playlists') }}">Playlists</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/register">CreateAccount</a></li>
+                    @endauth
+
                 </ul>
-        
             </div>
         </div>
     </nav>
