@@ -139,15 +139,23 @@ Route::get('/songs', [SongController::class, 'index']); // with optional ?genre_
 Route::get('/songs/{song}', [SongController::class, 'show']);
 
 
-// ✅ Guest playlist routes — open to everyone
-Route::get('/guest-playlists', [PlaylistController::class, 'guestIndex'])->name('guest.playlists');
-Route::post('/guest-playlists', [PlaylistController::class, 'guestStore'])->name('guest.playlists.store');
-Route::get('/guest-playlists/{id}', [PlaylistController::class, 'guestShow'])->name('guest.playlists.show');
-Route::post('/guest-playlists/{id}/songs', [PlaylistController::class, 'guestAddSong'])->name('guest.playlists.addSong');
-Route::delete('/guest-playlists/{id}/songs/{songId}', [PlaylistController::class, 'guestRemoveSong'])->name('guest.playlists.removeSong');
-Route::patch('/guest-playlists/{id}/rename', [PlaylistController::class, 'guestRename'])->name('guest.playlists.rename');
-Route::delete('/guest-playlists/{id}/songs/{songId}', [PlaylistController::class, 'guestRemoveSong'])->name('guest.playlists.removeSong');
-Route::delete('/guest-playlists/{id}', [PlaylistController::class, 'guestDelete'])->name('guest.playlists.delete');
+// Guest Playlists
+Route::prefix('guest/playlists')->name('guest.playlists.')->group(function () {
+    Route::get('/', [PlaylistController::class, 'guestIndex'])->name('index');
+    Route::get('/create', function () {
+        return view('guest.playlists.create');
+    })->name('create');
+    Route::post('/', [PlaylistController::class, 'guestStore'])->name('store');
+    Route::get('/{id}', [PlaylistController::class, 'guestShow'])->name('show');
+
+    // New route for add songs form
+    Route::get('/{id}/songs/add', [PlaylistController::class, 'guestAddSongsForm'])->name('addSongsForm');
+    Route::post('/{id}/songs', [PlaylistController::class, 'guestAddSong'])->name('addSong');
+
+    Route::delete('/{id}/songs/{songId}', [PlaylistController::class, 'guestRemoveSong'])->name('removeSong');
+    Route::delete('/{id}', [PlaylistController::class, 'guestDelete'])->name('delete');
+});
+
 
 
 // Playlists (public access to view songs)
@@ -179,4 +187,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/songs/{song}', [SongController::class, 'destroy']);
     Route::get('/songs/create', [SongController::class, 'create'])->name('songs.create');
     Route::post('/songs', [SongController::class, 'store'])->name('songs.store');
+    Route::post('/playlists/{playlist}/songs', [PlaylistController::class, 'attachSong'])->name('playlists.attachSong');
+    Route::get('/playlists/{playlist}/songs', [PlaylistController::class, 'showSongs'])->name('playlists.showSongs');
+    Route::delete('/playlists/{playlist}/songs/{song}', [PlaylistController::class, 'detachSong'])->name('playlists.detachSong');
+    Route::get('/playlists/{playlist}/add-songs', [PlaylistController::class, 'addSongsForm'])->name('playlists.addSongsForm');
+
+    
 });

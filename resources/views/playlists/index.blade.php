@@ -2,14 +2,13 @@
 
 @section('content')
 <h1>All Playlists</h1>
-
 <ul>
     @foreach ($playlists as $playlist)
         <li>
-            <a href="/playlists/{{ $playlist->id }}/songs">
-                {{ $playlist->name }}
+            <a href="{{ route('playlists.showSongs', $playlist->id) }}">
+    {{ $playlist->name }}
+</a>
 
-            </a>
             @auth
     @if ($playlist->user_id === auth()->id())
         <a href="{{ route('playlists.edit', $playlist) }}">Edit</a>
@@ -24,8 +23,6 @@
         </li>
     @endforeach
 </ul>
-
-
 
 
 <a href="/playlists/create">Create New Playlist</a>

@@ -19,5 +19,5 @@
     @endforelse
 </ul>
 
-<a href="/playlists/{{ $playlist->id }}/add-songs">Add Songs</a>
+<a href="{{ route('playlists.addSongsForm', $playlist->id) }}" class="btn btn-sm btn-info">Add Songs</a>
 @endsection

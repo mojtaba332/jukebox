@@ -19,13 +19,13 @@
 
             @auth
                 <a class="btn btn-success btn-lg" href="{{ route('playlists.index') }}">Mijn Playlists</a>
-                <a class="btn btn-warning btn-lg" href="/playlists/create">Make New Account</a>
+                <!-- <a class="btn btn-warning btn-lg" href="/playlists/create">Make New Account</a> -->
                 <form method="POST" action="{{ route('logout') }}" class="d-inline">
                     @csrf
                     <button type="submit" class="btn btn-outline-danger btn-lg">LogOut</button>
                 </form>
             @else
-                <a class="btn btn-success btn-lg" href="{{ route('guest.playlists') }}">Playlists</a>
+                <a href="/guest/playlists" class="btn btn-outline-primary btn-lg">Playlists</a>
                 <a class="btn btn-outline-primary btn-lg" href="/register">CreateAccount</a>
                 <a class="btn btn-outline-secondary btn-lg" href="/login">Login</a>
             @endauth

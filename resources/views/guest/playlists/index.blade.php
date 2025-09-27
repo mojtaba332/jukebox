@@ -1,45 +1,32 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-4">
-    <h2>Jouw tijdelijke playlists</h2>
+<div class="container">
+    <h1>Guest Playlists</h1>
 
-    @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    @forelse ($playlists as $playlist)
-        <div class="card mb-3">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                    <h5 class="mb-0">{{ $playlist['name'] }}</h5>
-                </div>
-                <div>
-                    <a href="{{ route('guest.playlists.show', $playlist['id']) }}" class="btn btn-sm btn-primary">Bekijk</a>
+    <a href="{{ route('guest.playlists.create') }}" class="btn btn-primary mb-3">Create Playlist</a>
 
-                    <form method="POST" action="{{ route('guest.playlists.delete', $playlist['id']) }}" class="d-inline">
+    @if($playlists && count($playlists) > 0)
+        <ul class="list-group">
+            @foreach($playlists as $playlist)
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{{ route('guest.playlists.show', $playlist['id']) }}">
+                        {{ $playlist['name'] }}
+                    </a>
+                    <form action="{{ route('guest.playlists.delete', $playlist['id']) }}" method="POST" class="ms-3">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Weet je zeker dat je deze playlist wilt verwijderen?')">Verwijder</button>
+                        <button class="btn btn-sm btn-danger">Delete</button>
                     </form>
-
-                </div>
-            </div>
-        </div>
-    @empty
-        <p>Je hebt nog geen playlists aangemaakt.</p>
-    @endforelse
-
-    <hr class="my-4">
-
-    <h4>Nieuwe playlist aanmaken</h4>
-    <form method="POST" action="{{ route('guest.playlists.store') }}">
-        @csrf
-        <div class="mb-3">
-            <label for="name" class="form-label">Playlist naam</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-success">Aanmaken</button>
-    </form>
+                </li>
+            @endforeach
+        </ul>
+    @else
+        <p>No guest playlists found.</p>
+    @endif
 </div>
 @endsection

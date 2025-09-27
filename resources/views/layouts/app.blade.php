@@ -22,7 +22,7 @@
                             <li class="nav-item"><button class="nav-link btn btn-link" type="submit">Uitloggen</button></li>
                         </form>
                     @else
-                        <li class="nav-item"><a class="nav-link" href="{{ route('guest.playlists') }}">Playlists</a></li>
+                        <li class="nav-item"><a href="/guest/playlists" class="nav-link">Playlists</a></li>
                         <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
                         <li class="nav-item"><a class="nav-link" href="/register">CreateAccount</a></li>
                     @endauth

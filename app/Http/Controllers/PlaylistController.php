@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Playlist;
 use App\Models\Song;
+use App\Services\GuestPlaylistService;
+
 
 class PlaylistController extends Controller
 {
@@ -12,13 +14,6 @@ class PlaylistController extends Controller
     {
         return view('playlists.create');
     }
-
-    // public function store(Request $request)
-    // {
-    //     $request->validate(['name' => 'required']);
-    //     Playlist::create(['name' => $request->name]);
-    //     return redirect('/playlists');
-    // }
 
     public function store(Request $request)
     {
@@ -30,23 +25,51 @@ class PlaylistController extends Controller
         return redirect()->route('playlists.index')->with('success', 'Playlist aangemaakt!');
     }
 
-    public function addSongsForm($id)
+    public function addSongsForm(Playlist $playlist)
     {
-        $playlist = Playlist::findOrFail($id);
+        if ($playlist->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $songs = Song::all();
+
         return view('playlists.add-songs', compact('playlist', 'songs'));
     }
 
-    public function attachSongs(Request $request, $id)
+    
+    public function attachSong(Request $request, Playlist $playlist)
     {
-        $playlist = Playlist::findOrFail($id);
-        $playlist->songs()->sync($request->songs); // attach selected songs
-        return redirect('/playlists/' . $id . '/songs');
+        $request->validate([
+            'songs' => 'required|array',
+            'songs.*' => 'exists:songs,id',
+        ]);
+
+        if ($playlist->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $playlist->songs()->syncWithoutDetaching($request->songs);
+
+        return redirect()->route('playlists.edit', $playlist)->with('success', 'Liedjes toegevoegd aan je playlist.');
+    }
+    public function detachSong(Playlist $playlist, Song $song)
+    {
+        if ($playlist->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $playlist->songs()->detach($song->id);
+
+        return back()->with('success', 'Liedje verwijderd uit de playlist.');
     }
 
-    public function showSongs($id)
+
+    public function showSongs(Playlist $playlist)
     {
-        $playlist = Playlist::with('songs')->findOrFail($id);
+        if ($playlist->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         return view('playlists.songs', compact('playlist'));
     }
 
@@ -69,11 +92,16 @@ class PlaylistController extends Controller
 
     public function edit(Playlist $playlist)
     {
-        if ($playlist->user_id !== Auth::id()) {
+        if ($playlist->user_id !== auth()->id()) {
             abort(403);
         }
-        return view('playlists.edit', compact('playlist'));
+
+        $songs = Song::all();
+
+        return view('playlists.edit', compact('playlist', 'songs'));
     }
+
+
 
     public function update(Request $request, Playlist $playlist)
     {
@@ -88,92 +116,74 @@ class PlaylistController extends Controller
         return redirect('/playlists')->with('success', 'Playlist deleted.');
     }
 
+    protected $guestPlaylist;
+
+    public function __construct(GuestPlaylistService $guestPlaylist)
+    {
+        $this->guestPlaylist = $guestPlaylist;
+    }
+
+    // Create a new guest playlist
     public function guestStore(Request $request)
     {
-        $request->validate(['name' => 'required|string|max:255']);
-
-        $playlist = [
-            'id' => uniqid(), // unique ID for this playlist
-            'name' => $request->name,
-            'songs' => [], // empty song list for now
-        ];
-
-        // Push the new playlist into the session
-        session()->push('guest_playlists', $playlist);
-
-        return redirect()->route('guest.playlists')->with('success', 'Playlist aangemaakt!');
+        $playlist = $this->guestPlaylist->create($request->input('name'));
+        return redirect()->route('guest.playlists.index');
     }
+
+    // List guest playlists
     public function guestIndex()
     {
-        $playlists = session('guest_playlists', []);
+        $playlists = $this->guestPlaylist->list();
         return view('guest.playlists.index', compact('playlists'));
     }
+
     public function guestShow($id)
     {
-        $playlists = session('guest_playlists', []);
-        $playlist = collect($playlists)->firstWhere('id', $id);
-
+        $playlist = $this->guestPlaylist->get((int)$id);
         if (!$playlist) {
-            abort(404);
+            return redirect()->route('guest.playlists.index')
+                ->with('error', 'Playlist not found or expired.');
         }
 
-        $songs = Song::all(); // fetch all songs from the database
-
-        return view('guest.playlists.show', compact('playlist', 'songs'));
+        $totalDuration = $this->guestPlaylist->getTotalDuration((int)$id);
+        return view('guest.playlists.show', compact('playlist', 'totalDuration'));
     }
+
+    // Add a song
     public function guestAddSong(Request $request, $id)
     {
-        $request->validate(['song_id' => 'required|exists:songs,id']);
-
-        $song = Song::find($request->song_id);
-
-        $playlists = session('guest_playlists', []);
-        $updated = [];
-
-        foreach ($playlists as $playlist) {
-            if ($playlist['id'] === $id) {
-                $playlist['songs'][] = [
-                    'id' => $song->id,
-                    'name' => $song->name,
-                    'artist' => $song->artist,
-                ];
-            }
-            $updated[] = $playlist;
-        }
-
-        session(['guest_playlists' => $updated]);
-
-        return redirect()->route('guest.playlists.show', $id)->with('success', 'Liedje toegevoegd aan playlist.');
+    $songIds = $request->input('song_ids', []); // array of selected checkboxes
+    foreach ($songIds as $songId) {
+        $this->guestPlaylist->addSong((int)$id, (int)$songId);
     }
 
-    public function guestRemoveSong($playlistId, $songId)
+    return redirect()->route('guest.playlists.show', $id);
+    }
+
+    // Remove a song
+    public function guestRemoveSong($id, $songId)
     {
-        $playlists = session('guest_playlists', []);
-        $updated = [];
-
-        foreach ($playlists as $playlist) {
-            if ($playlist['id'] === $playlistId) {
-                $playlist['songs'] = array_filter($playlist['songs'], function ($song) use ($songId) {
-                    return $song['id'] != $songId;
-                });
-            }
-            $updated[] = $playlist;
-        }
-
-        session(['guest_playlists' => $updated]);
-
-        return redirect()->route('guest.playlists.show', $playlistId)->with('success', 'Liedje verwijderd uit de playlist.');
+        $this->guestPlaylist->removeSong((int)$id, (int)$songId);
+        return redirect()->route('guest.playlists.show', $id);
     }
-
+    
+    // Delete a playlist
     public function guestDelete($id)
     {
-        $playlists = session('guest_playlists', []);
-        $updated = array_filter($playlists, fn($playlist) => $playlist['id'] !== $id);
-
-        session(['guest_playlists' => $updated]);
-
-        return redirect()->route('guest.playlists')->with('success', 'Playlist verwijderd.');
+        $this->guestPlaylist->delete((int)$id);
+        return redirect()->route('guest.playlists.index');
     }
+    public function guestAddSongsForm($id)
+{
+    $playlist = $this->guestPlaylist->get((int)$id);
+    if (!$playlist) {
+        return redirect()->route('guest.playlists.index')
+            ->with('error', 'Playlist not found or expired.');
+    }
+
+    $songs = \App\Models\Song::all();
+    return view('guest.playlists.add_songs', compact('playlist', 'songs'));
+}
 
 
 
