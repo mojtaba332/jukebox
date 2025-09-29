@@ -1,10 +1,11 @@
 @extends('layouts.app')
 
+
 @section('content')
 <div class="container mt-5">
     <div class="jumbotron text-center">
         <h1 class="display-4">Welcome to the Jukebox!</h1>
-        <p class="lead">Discover songs, genres and create your own playlists.</p>
+        <!-- <p class="lead">Discover songs, genres and create your own playlists.</p> -->
         <hr class="my-4">
 
         @auth
@@ -31,7 +32,7 @@
             @endauth
         </div>
         <br>
-        <img src="{{ asset('storage/juke.png') }}" alt="Jukebox Banner" class="img-fluid mb-4">
+        <img src="{{ asset('storage/music.jpg') }}" alt="Jukebox Banner" class="img-fluid mb-4"  style="max-width: 600px; width: 100%; height: auto;">
     </div>
 </div>
 @endsection

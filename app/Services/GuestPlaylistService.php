@@ -21,7 +21,7 @@ class GuestPlaylistService
     {
         $playlists = $this->getAllRaw();
         $id = $this->generateId($playlists);
-        $now = Carbon::now()->timestamp;
+        $now = Carbon::now()->timestamp; //huidige datum en tijd.
 
         $playlist = [
             'id' => $id,
